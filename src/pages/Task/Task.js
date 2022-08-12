@@ -97,7 +97,7 @@ const Task = () => {
           </DivOne>
 
           <Modal value={modal}>
-            <p>Facu</p>
+             <Button onClick={openModal}>Cerrar</Button>
           </Modal>
 
         </SectionOne>
