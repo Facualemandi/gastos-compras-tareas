@@ -59,7 +59,6 @@ const Button = styled.button`
   color: white;
   font-family: "Roboto", sans-serif;
   font-size: 25px;
-
   @media (min-width: 1080px) {
     margin: 50px;
     margin-left: 70px;
@@ -76,15 +75,45 @@ const Modal = styled.section`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.671);
-  display: ${({value}) => !value ? 'none' : 'block'};
+  display: ${({ value }) => (!value ? "none" : "block")};
 `;
 
+const TheForm = styled(Form)`
+  border: 1px solid red;
+  width: 90vw;
+  height: 500px;
+  margin: 100px auto;
+  background-color: white;
+`;
 
+const Input = styled(Field)`
+  display: flex;
+  margin-top: 5px;
+  width: 90%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  border: 1px solid grey;
+`;
+
+const DivForm = styled.div`
+  border: 1px solid red;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 10px;
+`;
+
+const Error = styled.p`
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  color: red;
+`;
 const Task = () => {
-
   const [modal, setModal] = useState(false);
-  
-   const openModal = () =>  !modal ? setModal(true) : setModal(false);
+
+  const openModal = () => (!modal ? setModal(true) : setModal(false));
 
   return (
     <>
@@ -97,9 +126,39 @@ const Task = () => {
           </DivOne>
 
           <Modal value={modal}>
-             <Button onClick={openModal}>Cerrar</Button>
-          </Modal>
+            <Formik
+              initialValues={{ name: "" }}
+              onSubmit={(valores) => {
+                console.log(valores);
+              }}
+              validate={(valores) => {
+                let errors = {};
 
+                if (!valores.name) {
+                  errors.name = "Por favor, ingresa el nombre de la tarea";
+                } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.name)) {
+                  errors.name = "El nombre no puede contener números";
+                }
+
+                return errors;
+              }}
+            >
+              {({ errors }) => (
+                <TheForm>
+                  <DivForm>
+                    <label htmlFor="name">Nombre</label>
+                    <Input name="name" />
+                    <ErrorMessage name="name" component={() => <Error>{errors.name}</Error>}/>
+                  </DivForm>
+
+                  <Button type="button" onClick={openModal}>
+                    Cerrar
+                  </Button>
+                  <Button type="submit">Agregar</Button>
+                </TheForm>
+              )}
+            </Formik>
+          </Modal>
         </SectionOne>
       </Main>
     </>
