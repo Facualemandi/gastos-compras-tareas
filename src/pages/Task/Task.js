@@ -79,7 +79,6 @@ const Modal = styled.section`
 `;
 
 const TheForm = styled(Form)`
-  border: 1px solid red;
   width: 90vw;
   height: 500px;
   margin: 100px auto;
@@ -97,7 +96,6 @@ const Input = styled(Field)`
 `;
 
 const DivForm = styled.div`
-  border: 1px solid red;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -109,7 +107,15 @@ const Error = styled.p`
   font-size: 14px;
   font-family: "Roboto", sans-serif;
   color: red;
+  margin-top: 5px;
 `;
+
+const Labels = styled.label`
+ margin-top: 10px;
+ font-family: 'Roboto', sans-serif;
+ font-size: 16px;
+
+`
 const Task = () => {
   const [modal, setModal] = useState(false);
 
@@ -146,7 +152,7 @@ const Task = () => {
               {({ errors }) => (
                 <TheForm>
                   <DivForm>
-                    <label htmlFor="name">Nombre</label>
+                    <Labels htmlFor="name">Nombre</Labels>
                     <Input name="name" />
                     <ErrorMessage name="name" component={() => <Error>{errors.name}</Error>}/>
                   </DivForm>
