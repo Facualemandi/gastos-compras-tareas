@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import calendar from "../../components/images/calendar.svg";
 import { Form, Formik, Field, ErrorMessage } from "formik";
+import { MdDeleteOutline } from "react-icons/md";
+import { BiTaskX } from "react-icons/bi";
 
 const Main = styled.main`
   width: 100vw;
   height: auto;
   min-height: 100vh;
   background-color: #fbf3d8;
+  padding-bottom: 20px;
   @media (min-width: 1080px) {
     display: flex;
     justify-content: center;
@@ -52,6 +55,7 @@ const ButtonAdd = styled.button`
 
   @media (min-width: 1080px) {
     margin-top: 100px;
+    cursor: pointer;
   }
 `;
 //////////////////////////////////////////////////
@@ -141,27 +145,115 @@ const Button = styled.button`
   }
 `;
 
-
 const SectionBtns = styled.section`
   display: flex;
 `;
 ///////////////////////////////////////////
 
 const SectionTwo = styled.section`
-  @media (min-width: 1080px) {
-    width: 540px;
-    border: 1px solid red;
-  }
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 90vw;
+  height: auto;
+  margin: 15px;
+
   @media (min-width: 1080px) {
     width: 690px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(10, max-content);
   }
 `;
+const DivTasks = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const ContainerTask = styled.section`
+  padding: 10px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.147);
+  margin-top: 10px;
+  @media (min-width: 1080px){
+    width: 330px;
+    height: max-content;
+    cursor: pointer;
+    max-height: 330px;
+  }
+`;
+const Description = styled.p`
+  width: 90vw;
+  word-wrap: break-word;
+  margin-top: 15px;
+  @media (min-width: 1080px){
+    width: 300px;
+  }
+`;
+const IconDelete = styled(MdDeleteOutline)`
+  width: 35px;
+  height: 35px;
+  color: grey;
+`;
+const H3 = styled.h3`
+  font-family: "Roboto", sans-serif;
+  font-size: 25px;
+`;
+const SectionNoTask = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const IconNoTask = styled(BiTaskX)`
+  width: 100px;
+  height: 100px;
+  margin-top: 30px;
 
+  @media (min-width: 1080px){
+    cursor: pointer;
+  }
+`;
 
 const Task = () => {
   const [modal, setModal] = useState(false);
   const theModal = () => (!modal ? setModal(true) : setModal(false));
 
+  const localTask = localStorage.getItem("tasks");
+
+  let allTasks;
+
+  if (!localTask) {
+    localStorage.setItem("tasks", JSON.stringify([]));
+    allTasks = [];
+  } else {
+    allTasks = JSON.parse(localTask);
+  }
+
+  const [tasks, setTasks] = useState(allTasks);
+
+  const saveTasks = (newTasks) => {
+    const stringTask = JSON.stringify(newTasks);
+    localStorage.setItem("tasks", stringTask);
+    setTasks(newTasks);
+  };
+
+  const deleteTask = (el) => {
+    const indexTask = tasks.findIndex((task) => task.id === el.id);
+    const newTasks = [...tasks];
+    newTasks.splice(indexTask, 1);
+    return saveTasks(newTasks);
+  };
+
+  function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+    return uuid;
+  }
   return (
     <>
       <Main>
@@ -170,66 +262,91 @@ const Task = () => {
           <ButtonAdd onClick={theModal}>Agregar Tarea +</ButtonAdd>
         </SectionOne>
 
+        <Modal value={modal}>
+          <Formik
+            initialValues={{ name: "", description: "" }}
+            onSubmit={(valores, { resetForm }) => {
+              valores.id = generateUUID();
+              console.log(valores);
+              localStorage.setItem(
+                "tasks",
+                JSON.stringify([...tasks, valores])
+              );
+              setTasks([...tasks, valores]);
+              resetForm();
+              theModal();
+            }}
+            validate={(valores) => {
+              let errors = {};
 
-          <Modal value={modal}>
-            <Formik
-              initialValues={{ name: "", description: "" }}
-              onSubmit={(valores, { resetForm }) => {}}
-              validate={(valores) => {
-                let errors = {};
+              if (!valores.name) {
+                errors.name = "Por favor, ingresa el nombre de la tarea";
+              } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.name)) {
+                errors.name = "El nombre no puede contener números";
+              }
 
-                if (!valores.name) {
-                  errors.name = "Por favor, ingresa el nombre de la tarea";
-                } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.name)) {
-                  errors.name = "El nombre no puede contener números";
-                }
+              if (!valores.description) {
+                errors.description = "Por favor, ingresa una descripción";
+              } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(errors.description)) {
+                errors.description = "L";
+              }
 
-                if (!valores.description) {
-                  errors.description = "Por favor, ingresa una descripción";
-                } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(errors.description)) {
-                  errors.description = "L";
-                }
+              return errors;
+            }}
+          >
+            {({ errors }) => (
+              <TheForm>
+                <DivForm>
+                  <Labels htmlFor="name">Tarea</Labels>
+                  <Input name="name" placeholder="Nombre de la tarea" />
+                  <ErrorMessage
+                    name="name"
+                    component={() => <Error>{errors.name}</Error>}
+                  />
+                </DivForm>
 
-                return errors;
-              }}
-            >
-              {({ errors }) => (
-                <TheForm>
-                  <DivForm>
-                    <Labels htmlFor="name">Tarea</Labels>
-                    <Input name="name" />
-                    <ErrorMessage
-                      name="name"
-                      component={() => <Error>{errors.name}</Error>}
-                    />
-                  </DivForm>
+                <DivForm>
+                  <Labels htmlFor="description">Descripción</Labels>
+                  <Textarea
+                    name="description"
+                    type="textarea"
+                    component={"textarea"}
+                    placeholder="Agregue una descripción de su tarea"
+                  />
+                  <ErrorMessage
+                    name="description"
+                    component={() => <Error>{errors.description}</Error>}
+                  />
+                </DivForm>
 
-                  <DivForm>
-                    <Labels htmlFor="description">Descripción</Labels>
-                    <Textarea
-                      name="description"
-                      type="textarea"
-                      component={"textarea"}
-                    />
-                    <ErrorMessage
-                      name="description"
-                      component={() => <Error>{errors.description}</Error>}
-                    />
-                  </DivForm>
+                <SectionBtns>
+                  <Button type="button" onClick={theModal}>
+                    Cerrar
+                  </Button>
+                  <Button type="submit">Agregar</Button>
+                </SectionBtns>
+              </TheForm>
+            )}
+          </Formik>
+        </Modal>
 
-                  <SectionBtns>
-                    <Button type="button" onClick={theModal}>
-                      Cerrar
-                    </Button>
-                    <Button type="submit">Agregar</Button>
-                  </SectionBtns>
-                </TheForm>
-              )}
-            </Formik>
-          </Modal>
-      
-
-        <SectionTwo></SectionTwo>
+        <SectionTwo>
+          {tasks.length === 0 ? (
+            <SectionNoTask>
+              <IconNoTask />
+            </SectionNoTask>
+          ) : (
+            tasks.map((el) => (
+              <ContainerTask key={el.id}>
+                <DivTasks>
+                  <H3>{el.name}</H3>
+                  <IconDelete onClick={() => deleteTask(el)} />
+                </DivTasks>
+                <Description>{el.description}</Description>
+              </ContainerTask>
+            ))
+          )}
+        </SectionTwo>
       </Main>
     </>
   );
