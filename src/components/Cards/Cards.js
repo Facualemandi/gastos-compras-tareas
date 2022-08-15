@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import IlustrationOne from "../images/example-8.svg";
+import IlustrationOne from "../images/calendar.svg";
 import Card from "../images/card.svg";
 import Pig from "../images/Pig.svg";
 import { NavLink } from "react-router-dom";
@@ -11,22 +11,13 @@ const Main = styled.main`
   background-color: #fbf3d8;
   padding-top: 25px;
   padding-bottom: 25px;
+  height: auto;
+  min-height: 100vh;
 `;
 const SectionDesktop = styled.section`
   @media (min-width: 780px) {
     display: flex;
   }
-`;
-
-const H1 = styled.section`
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 35px;
-  font-family: "Roboto", sans-serif;
-  font-size: 25px;
-  margin-top: 15px;
 `;
 
 const Button = styled.button`
@@ -69,7 +60,6 @@ const Div = styled.div`
 `;
 
 const Img = styled.img`
-  height: 310px;
   height: 240px;
   background-color: #ffdddd;
 `;
@@ -92,7 +82,6 @@ const Cards = () => {
     <>
       <Main>
         <SectionOne>
-          {/* <H1>Por favor, seleccione una opción</H1> */}
           <SectionDesktop>
             <Div>
               <Img alt="" src={IlustrationOne} />
