@@ -76,6 +76,9 @@ const TheForm = styled(Form)`
   background-color: white;
   border-radius: 15px;
   box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.281);
+  @media (min-width: 1080px) {
+    width: 50vw;
+  }
 `;
 
 const Input = styled(Field)`
@@ -153,19 +156,18 @@ const SectionBtns = styled.section`
 const SectionTwo = styled.section`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
+  grid-auto-rows: max-content;
   width: 90vw;
   height: auto;
   margin: 15px;
 
   @media (min-width: 1080px) {
     width: 690px;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(10, max-content);
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-rows: max-content;
   }
-`;
-const DivTasks = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;
 const ContainerTask = styled.section`
   padding: 10px;
@@ -173,18 +175,24 @@ const ContainerTask = styled.section`
   border-radius: 15px;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.147);
   margin-top: 10px;
-  @media (min-width: 1080px){
+  @media (min-width: 1080px) {
     width: 330px;
+    margin: 5px;
     height: max-content;
     cursor: pointer;
-    max-height: 330px;
   }
 `;
+
+const DivTasks = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const Description = styled.p`
   width: 90vw;
   word-wrap: break-word;
   margin-top: 15px;
-  @media (min-width: 1080px){
+  @media (min-width: 1080px) {
     width: 300px;
   }
 `;
@@ -196,6 +204,7 @@ const IconDelete = styled(MdDeleteOutline)`
 const H3 = styled.h3`
   font-family: "Roboto", sans-serif;
   font-size: 25px;
+  width: 250px;
 `;
 const SectionNoTask = styled.section`
   display: flex;
@@ -207,7 +216,7 @@ const IconNoTask = styled(BiTaskX)`
   height: 100px;
   margin-top: 30px;
 
-  @media (min-width: 1080px){
+  @media (min-width: 1080px) {
     cursor: pointer;
   }
 `;
