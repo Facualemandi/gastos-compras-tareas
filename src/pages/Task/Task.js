@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import calendar from "../../components/images/calendar.svg";
 
@@ -7,38 +7,26 @@ const Main = styled.main`
   height: auto;
   min-height: 100vh;
   background-color: #fbf3d8;
-  @media (min-width: 1080px){
+  @media (min-width: 1080px) {
     display: flex;
     justify-content: center;
   }
-  @media (min-width: 1380px){
+  @media (min-width: 1380px) {
     display: flex;
     justify-content: center;
   }
 `;
 
+//////////// Style Primera Sección ///////////////
 const SectionOne = styled.section`
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 
-  @media (min-width: 1080px){
-    justify-content: flex-start;
-    align-items: flex-start;
+  @media (min-width: 1080px) {
     width: 540px;
   }
-  @media (min-width: 1080px){
-    width: 690px;
-  }
-`;
-const SectionTwo = styled.section`
-  @media (min-width: 1080px){
-    width: 540px;
-    border: 1px solid red;
-  }
-  @media (min-width: 1080px){
+  @media (min-width: 1080px) {
     width: 690px;
   }
 `;
@@ -61,19 +49,63 @@ const ButtonAdd = styled.button`
   font-size: 24px;
   max-width: 350px;
 
-  @media (min-width: 1080px){
-    margin-left: 100px;
+  @media (min-width: 1080px) {
     margin-top: 100px;
   }
 `;
+//////////////////////////////////////////////////
+
+///////////// Syle Modal //////////////////
+const Modal = styled.section`
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.349);
+  display: ${({ value }) => (!value ? "none" : "true")};
+  position: absolute;
+  top: 0px;
+`;
+const SectionModal = styled.section`
+  width: 90vw;
+  height: 500px;
+  border: 1px solid red;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+`;
+///////////////////////////////////////////
+
+
+const SectionTwo = styled.section`
+  @media (min-width: 1080px) {
+    width: 540px;
+    border: 1px solid red;
+  }
+  @media (min-width: 1080px) {
+    width: 690px;
+  }
+`;
 const Task = () => {
+  const [modal, setModal] = useState(false);
+  const theModal = () => (!modal ? setModal(true) : setModal(false));
+
   return (
     <>
       <Main>
         <SectionOne>
-            <Img alt="Calendario" src={calendar} />
-            <ButtonAdd>Agregar Tarea +</ButtonAdd>
+          <Img alt="Calendario" src={calendar} />
+          <ButtonAdd onClick={theModal}>Agregar Tarea +</ButtonAdd>
         </SectionOne>
+
+        <Modal value={modal}>
+          <SectionModal>
+
+             <input/>
+             <input/>
+            <ButtonAdd onClick={theModal}>Cerrar</ButtonAdd>
+          </SectionModal>
+        </Modal>
 
         <SectionTwo></SectionTwo>
       </Main>
