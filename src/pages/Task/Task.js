@@ -65,16 +65,6 @@ const Modal = styled.section`
   position: absolute;
   top: 0px;
 `;
-const SectionModal = styled.section`
-  width: 90vw;
-  height: 500px;
-  border: 1px solid red;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin: auto;
-`;
 const TheForm = styled(Form)`
   width: 90vw;
   height: auto;
@@ -127,6 +117,34 @@ const Labels = styled.label`
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
 `;
+
+const Button = styled.button`
+  background: linear-gradient(to bottom, #7a5bf5, #b56bff);
+  width: 40vw;
+  max-width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-size: 25px;
+  @media (min-width: 1080px) {
+    margin: 50px;
+    margin-left: 70px;
+    width: max-content;
+    width: 300px;
+    cursor: pointer;
+  }
+`;
+
+
+const SectionBtns = styled.section`
+  display: flex;
+`;
 ///////////////////////////////////////////
 
 const SectionTwo = styled.section`
@@ -138,6 +156,8 @@ const SectionTwo = styled.section`
     width: 690px;
   }
 `;
+
+
 const Task = () => {
   const [modal, setModal] = useState(false);
   const theModal = () => (!modal ? setModal(true) : setModal(false));
@@ -150,8 +170,8 @@ const Task = () => {
           <ButtonAdd onClick={theModal}>Agregar Tarea +</ButtonAdd>
         </SectionOne>
 
-        <Modal value={modal}>
-          <SectionModal>
+
+          <Modal value={modal}>
             <Formik
               initialValues={{ name: "", description: "" }}
               onSubmit={(valores, { resetForm }) => {}}
@@ -197,17 +217,17 @@ const Task = () => {
                     />
                   </DivForm>
 
-                  <section>
-                    <button type="button" onClick={""}>
+                  <SectionBtns>
+                    <Button type="button" onClick={theModal}>
                       Cerrar
-                    </button>
-                    <button type="submit">Agregar</button>
-                  </section>
+                    </Button>
+                    <Button type="submit">Agregar</Button>
+                  </SectionBtns>
                 </TheForm>
               )}
             </Formik>
-          </SectionModal>
-        </Modal>
+          </Modal>
+      
 
         <SectionTwo></SectionTwo>
       </Main>
