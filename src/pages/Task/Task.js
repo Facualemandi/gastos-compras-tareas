@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import calendar from "../../components/images/calendar.svg";
-import { Form, Field, ErrorMessage } from "formik";
+import { Form, Formik, Field, ErrorMessage } from "formik";
 
 const Main = styled.main`
   width: 100vw;
@@ -152,30 +152,60 @@ const Task = () => {
 
         <Modal value={modal}>
           <SectionModal>
-            <TheForm >
-              <DivForm>
-                <Labels htmlFor="name">Tarea</Labels>
-                <Input name="name" />
-                <ErrorMessage
-                  name="name"
-                  component={() => <Error>{errors.name}</Error>}
-                />
-              </DivForm>
+            <Formik
+              initialValues={{ name: "", description: "" }}
+              onSubmit={(valores, { resetForm }) => {}}
+              validate={(valores) => {
+                let errors = {};
 
-              <DivForm>
-                <Labels htmlFor="description">Descripción</Labels>
-                <Textarea
-                  name="description"
-                  type="textarea"
-                  component={"textarea"}
-                />
-                <ErrorMessage
-                  name="description"
-                  component={() => <Error>{errors.description}</Error>}
-                />
-              </DivForm>
-            </TheForm>
-            <ButtonAdd onClick={theModal}>Cerrar</ButtonAdd>
+                if (!valores.name) {
+                  errors.name = "Por favor, ingresa el nombre de la tarea";
+                } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(valores.name)) {
+                  errors.name = "El nombre no puede contener números";
+                }
+
+                if (!valores.description) {
+                  errors.description = "Por favor, ingresa una descripción";
+                } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(errors.description)) {
+                  errors.description = "L";
+                }
+
+                return errors;
+              }}
+            >
+              {({ errors }) => (
+                <TheForm>
+                  <DivForm>
+                    <Labels htmlFor="name">Tarea</Labels>
+                    <Input name="name" />
+                    <ErrorMessage
+                      name="name"
+                      component={() => <Error>{errors.name}</Error>}
+                    />
+                  </DivForm>
+
+                  <DivForm>
+                    <Labels htmlFor="description">Descripción</Labels>
+                    <Textarea
+                      name="description"
+                      type="textarea"
+                      component={"textarea"}
+                    />
+                    <ErrorMessage
+                      name="description"
+                      component={() => <Error>{errors.description}</Error>}
+                    />
+                  </DivForm>
+
+                  <section>
+                    <button type="button" onClick={""}>
+                      Cerrar
+                    </button>
+                    <button type="submit">Agregar</button>
+                  </section>
+                </TheForm>
+              )}
+            </Formik>
           </SectionModal>
         </Modal>
 
