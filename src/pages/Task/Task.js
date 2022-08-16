@@ -307,10 +307,7 @@ const Task = () => {
                 <DivForm>
                   <Labels htmlFor="name">Tarea</Labels>
                   <Input name="name" placeholder="Nombre de la tarea" />
-                  <ErrorMessage
-                    name="name"
-                    component={() => <Error>{errors.name}</Error>}
-                  />
+                  <ErrorMessage name="name" component={() => <Error>{errors.name}</Error>} />
                 </DivForm>
 
                 <DivForm>

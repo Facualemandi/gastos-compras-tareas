@@ -109,9 +109,28 @@ const Labels = styled.label`
 const SectionBtns = styled.section`
   display: flex;
 `;
+const Error = styled.p`
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  color: red;
+  margin-top: 5px;
+`;
 
 const Bills = () => {
+  function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+    return uuid;
+  }
   const [modal, setModal] = useState(false);
+  const [gastos, setGastos] = useState([])
   const theModal = () => (!modal ? setModal(true) : setModal(false));
 
   return (
@@ -123,79 +142,138 @@ const Bills = () => {
         <ButtonAdd onClick={theModal}>Agregar gasto del día</ButtonAdd>
 
         <Modal value={modal}>
-          <Formik initialValues={{ mes: "", dia: "", costo: "", gasto: "" }}>
-            <TheForm>
-              <DivForm>
-                <Labels htmlFor="mes">Mes:</Labels>
-                <Input name="mes" component="select">
-                  <option value="Enero">Enero</option>
-                  <option value="Febrero">Febrero</option>
-                  <option value="Marzo">Marzo</option>
-                  <option value="Abril">Abril</option>
-                  <option value="Mayo">Mayo</option>
-                  <option value="Junio">Junio</option>
-                  <option value="Julio">Julio</option>
-                  <option value="Agosto">Agosto</option>
-                  <option value="Septiembre">Septiembre</option>
-                  <option value="Octubre">Octubre</option>
-                  <option value="Noviembre">Noviembre</option>
-                  <option value="Diciembre">Diciembre</option>
-                </Input>
-              </DivForm>
+          <Formik
+            initialValues={{ mes: "", dia: "", costo: "", producto: "" }}
+            onSubmit={(valores) => {
+              valores.id = generateUUID();
+              console.log(valores);
+            }}
+            validate={(valores) => {
+              let errors = {};
+              if (!valores.mes) {
+                errors.mes = "Por favor, seleccione un mes";
+              }else if(valores.mes === 'ninguno'){
+                errors.mes = 'Por favor, seleccione un mes'
+              }
 
-              <DivForm>
-                <Labels htmlFor="dia">Día:</Labels>
-                <Input name="dia" component="select">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                  <option value="25">25</option>
-                  <option value="26">26</option>
-                  <option value="27">27</option>
-                  <option value="28">28</option>
-                  <option value="29">29</option>
-                  <option value="30">30</option>
-                  <option value="31">31</option>
-                </Input>
-              </DivForm>
 
-              <DivForm>
-                <Labels htmlFor="producto">Producto:</Labels>
-                <Input name="producto" id="producto" type="text" placeholder='ej: Celular...'/>
-              </DivForm>
+              if(!valores.dia){
+                errors.dia = "Por favor, seleccione un día";
+              }else if(valores.dia === 'ninguno'){
+                errors.dia = "Por favor, seleccione un día";
+              }
 
-              <DivForm>
-                <Labels htmlFor="costo">Costo:</Labels>
-                <Input name="costo" id="costo" type="number"  placeholder='ej: 250'/>
-              </DivForm>
+              if(!valores.producto){
+                errors.producto = "Por favor, ingrese el nombre del producto";
+              }
 
-              <SectionBtns>
+              if (!valores.costo) {
+                errors.costo = "Por favor, ingrese el valor de su producto";
+              } else if (!/^([A-Za-z0-9_ ]+)$/.test(valores.costo)) {
+                errors.costo = "No puedes ingresar caracteres especiales";
+              }
+
+              return errors;
+            }}
+          >
+            {({ errors }) => (
+              <TheForm>
+                <DivForm>
+                  <Labels htmlFor="mes">Mes:</Labels>
+                  <Input name="mes" component="select">
+                    <option value="ninguno">Seleccione un mes</option>
+                    <option value="Enero">Enero</option>
+                    <option value="Febrero">Febrero</option>
+                    <option value="Marzo">Marzo</option>
+                    <option value="Abril">Abril</option>
+                    <option value="Mayo">Mayo</option>
+                    <option value="Junio">Junio</option>
+                    <option value="Julio">Julio</option>
+                    <option value="Agosto">Agosto</option>
+                    <option value="Septiembre">Septiembre</option>
+                    <option value="Octubre">Octubre</option>
+                    <option value="Noviembre">Noviembre</option>
+                    <option value="Diciembre">Diciembre</option>
+                  </Input>
+                  <ErrorMessage
+                    name="mes"
+                    component={() => <Error>{errors.mes}</Error>}
+                  />
+                </DivForm>
+
+                <DivForm>
+                  <Labels htmlFor="dia">Día:</Labels>
+                  <Input name="dia" component="select">
+                    <option value="ninguno">Seleccione un día</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                  </Input>
+                </DivForm>
+
+                <DivForm>
+                  <Labels htmlFor="producto">Producto:</Labels>
+                  <Input
+                    name="producto"
+                    id="producto"
+                    type="text"
+                    placeholder="ej: Celular..."
+                  />
+                     <ErrorMessage
+                    name="producto"
+                    component={() => <Error>{errors.producto}</Error>}
+                  />
+                </DivForm>
+
+                <DivForm>
+                  <Labels htmlFor="costo">Costo:</Labels>
+                  <Input
+                    name="costo"
+                    id="costo"
+                    type="number"
+                    placeholder="ej: 10000"
+                  />
+                  <ErrorMessage
+                    name="costo"
+                    component={() => <Error>{errors.costo}</Error>}
+                  />
+                </DivForm>
+
+                <SectionBtns>
                   <Button type="button" onClick={theModal}>
                     Cerrar
                   </Button>
                   <Button type="submit">Agregar</Button>
                 </SectionBtns>
-            </TheForm>
+              </TheForm>
+            )}
           </Formik>
         </Modal>
       </Main>
