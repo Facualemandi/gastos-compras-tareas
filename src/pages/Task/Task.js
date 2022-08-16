@@ -274,13 +274,11 @@ const Task = () => {
         <Modal value={modal}>
           <Formik
             initialValues={{ name: "", description: "" }}
+            
             onSubmit={(valores, { resetForm }) => {
               valores.id = generateUUID();
-              console.log(valores);
-              localStorage.setItem(
-                "tasks",
-                JSON.stringify([...tasks, valores])
-              );
+
+              localStorage.setItem( "tasks", JSON.stringify([...tasks, valores]) );
               setTasks([...tasks, valores]);
               resetForm();
               theModal();
@@ -305,6 +303,7 @@ const Task = () => {
           >
             {({ errors }) => (
               <TheForm>
+
                 <DivForm>
                   <Labels htmlFor="name">Tarea</Labels>
                   <Input name="name" placeholder="Nombre de la tarea" />

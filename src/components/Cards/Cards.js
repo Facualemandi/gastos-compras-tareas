@@ -91,7 +91,9 @@ const Cards = () => {
             </Div>
             <Div>
               <Img alt="" src={Pig} />
-              <Button>Control de gastos</Button>
+              <NavL to={'/bills'}>
+                <Button>Control de gastos</Button>
+              </NavL>
             </Div>
           </SectionDesktop>
           <Div>
